@@ -5,6 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Montre</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/upload.css') }}">
+    <style>
+        .metadata-form {
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .metadata-form h2 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 18px;
+        }
+    </style>
 </head>
 <body>
 <h1>Uploader une photo de montre</h1>
@@ -21,8 +51,44 @@
     <div id="preview">
         <img id="imagePreview" src="#" alt="Aperçu">
         <div class="file-info" id="fileInfo"></div>
-        <button type="submit" id="submitBtn" style="display: none;">Analyser cette montre</button>
     </div>
+
+    <div class="metadata-form">
+        <h2>Informations sur la montre (facultatif)</h2>
+        <p>Ces informations aideront à rendre la recherche plus précise</p>
+
+        <div class="form-group">
+            <label for="brand">Marque</label>
+            <input type="text" id="brand" name="brand" placeholder="Ex: Rolex, Omega, Patek Philippe">
+        </div>
+
+        <div class="form-group">
+            <label for="model">Modèle</label>
+            <input type="text" id="model" name="model" placeholder="Ex: Submariner, Speedmaster, Nautilus">
+        </div>
+
+        <div class="form-group">
+            <label for="color">Couleur</label>
+            <input type="text" id="color" name="color" placeholder="Ex: noir, or/acier, bleu">
+        </div>
+
+        <div class="form-group">
+            <label for="series">Série/Collection</label>
+            <input type="text" id="series" name="series" placeholder="Ex: Oyster, Professional, Classic">
+        </div>
+
+        <div class="form-group">
+            <label for="year">Année</label>
+            <input type="text" id="year" name="year" placeholder="Ex: 2020">
+        </div>
+
+        <div class="form-group">
+            <label for="features">Caractéristiques particulières</label>
+            <input type="text" id="features" name="features" placeholder="Ex: chronographe, lunette céramique">
+        </div>
+    </div>
+
+    <button type="submit" id="submitBtn">Analyser cette montre</button>
 </form>
 
 <script src="{{ url_for('static', filename='scripts/upload.js') }}"></script>
