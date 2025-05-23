@@ -5,92 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Montre</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/upload.css') }}">
-    <style>
-        .metadata-form {
-            max-width: 500px;
-            margin: 20px auto;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        .form-group input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .metadata-form h2 {
-            margin-top: 0;
-            margin-bottom: 15px;
-            color: #333;
-            font-size: 18px;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-<h1>Uploader une photo de montre</h1>
+    <div class="glass-card main-container">
+        <h1>Analyse de Montre</h1>
 
-<form method="post" enctype="multipart/form-data" id="uploadForm">
-    <div class="upload-container" id="dropArea">
-        <i>📁</i>
-        <p>Glissez-déposez votre photo de montre ici</p>
-        <p>ou</p>
-        <button type="button" id="browseBtn">Parcourir</button>
-        <input type="file" name="file" id="fileInput" accept="image/*">
+        <form method="post" enctype="multipart/form-data" id="uploadForm">
+            <div class="upload-container" id="dropArea">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p>Glissez-déposez votre photo de montre ici</p>
+                <p>ou</p>
+                <button type="button" id="browseBtn">Choisir une image</button>
+                <input type="file" name="file" id="fileInput" accept="image/*">
+            </div>
+
+            <div id="preview" class="glass-card" style="display: none;">
+                <img id="imagePreview" src="#" alt="Aperçu">
+                <div class="file-info" id="fileInfo"></div>
+            </div>
+
+            <div class="metadata-form">
+                <h2><i class="fas fa-info-circle"></i> Informations sur la montre</h2>
+                <p>Ces informations aideront à rendre la recherche plus précise</p>
+
+                <div class="form-group">
+                    <label for="brand"><i class="fas fa-trademark"></i> Marque</label>
+                    <input type="text" id="brand" name="brand" placeholder="Ex: Rolex, Omega, Patek Philippe">
+                </div>
+
+                <div class="form-group">
+                    <label for="model"><i class="fas fa-tag"></i> Modèle</label>
+                    <input type="text" id="model" name="model" placeholder="Ex: Submariner, Speedmaster, Nautilus">
+                </div>
+
+                <div class="form-group">
+                    <label for="color"><i class="fas fa-palette"></i> Couleur</label>
+                    <input type="text" id="color" name="color" placeholder="Ex: noir, or/acier, bleu">
+                </div>
+
+                <div class="form-group">
+                    <label for="series"><i class="fas fa-layer-group"></i> Série/Collection</label>
+                    <input type="text" id="series" name="series" placeholder="Ex: Oyster, Professional, Classic">
+                </div>
+
+                <div class="form-group">
+                    <label for="year"><i class="fas fa-calendar-alt"></i> Année</label>
+                    <input type="text" id="year" name="year" placeholder="Ex: 2020">
+                </div>
+
+                <div class="form-group">
+                    <label for="features"><i class="fas fa-list-ul"></i> Caractéristiques particulières</label>
+                    <input type="text" id="features" name="features" placeholder="Ex: chronographe, lunette céramique">
+                </div>
+            </div>
+
+            <button type="submit" id="submitBtn"><i class="fas fa-search"></i> Analyser cette montre</button>
+
+            <!-- Ajout du loader -->
+            <div id="loading" class="loading-container" style="display: none;">
+                <div class="loading-spinner"></div>
+                <p>Analyse en cours, veuillez patienter...</p>
+            </div>
+        </form>
     </div>
 
-    <div id="preview">
-        <img id="imagePreview" src="#" alt="Aperçu">
-        <div class="file-info" id="fileInfo"></div>
-    </div>
-
-    <div class="metadata-form">
-        <h2>Informations sur la montre (facultatif)</h2>
-        <p>Ces informations aideront à rendre la recherche plus précise</p>
-
-        <div class="form-group">
-            <label for="brand">Marque</label>
-            <input type="text" id="brand" name="brand" placeholder="Ex: Rolex, Omega, Patek Philippe">
-        </div>
-
-        <div class="form-group">
-            <label for="model">Modèle</label>
-            <input type="text" id="model" name="model" placeholder="Ex: Submariner, Speedmaster, Nautilus">
-        </div>
-
-        <div class="form-group">
-            <label for="color">Couleur</label>
-            <input type="text" id="color" name="color" placeholder="Ex: noir, or/acier, bleu">
-        </div>
-
-        <div class="form-group">
-            <label for="series">Série/Collection</label>
-            <input type="text" id="series" name="series" placeholder="Ex: Oyster, Professional, Classic">
-        </div>
-
-        <div class="form-group">
-            <label for="year">Année</label>
-            <input type="text" id="year" name="year" placeholder="Ex: 2020">
-        </div>
-
-        <div class="form-group">
-            <label for="features">Caractéristiques particulières</label>
-            <input type="text" id="features" name="features" placeholder="Ex: chronographe, lunette céramique">
-        </div>
-    </div>
-
-    <button type="submit" id="submitBtn">Analyser cette montre</button>
-</form>
-
-<script src="{{ url_for('static', filename='scripts/upload.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts/upload.js') }}"></script>
 </body>
 </html>

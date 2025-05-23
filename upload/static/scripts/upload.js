@@ -4,7 +4,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const browseBtn = document.getElementById('browseBtn');
     const imagePreview = document.getElementById('imagePreview');
     const fileInfo = document.getElementById('fileInfo');
+    const preview = document.getElementById('preview');
     const submitBtn = document.getElementById('submitBtn');
+    const uploadForm = document.getElementById('uploadForm');
+    const loading = document.getElementById('loading');
 
     browseBtn.addEventListener('click', function () {
         fileInput.click();
@@ -19,6 +22,24 @@ document.addEventListener('DOMContentLoaded', function () {
     setupDragAndDrop();
 
     fileInput.addEventListener('change', updateFileInfo);
+
+    uploadForm.addEventListener('submit', function(e) {
+        // Vérifier si un fichier a été sélectionné
+        if (fileInput.files.length > 0) {
+            // Afficher le loader
+            loading.style.display = 'flex';
+            // Ajouter une classe pour désactiver les interactions avec le formulaire
+            uploadForm.classList.add('form-disabled');
+
+            // Le formulaire continue sa soumission normalement
+            return true;
+        } else {
+            // Empêcher la soumission si aucun fichier n'est sélectionné
+            e.preventDefault();
+            alert('Veuillez sélectionner une image avant de continuer.');
+            return false;
+        }
+    });
 
     function setupDragAndDrop() {
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
@@ -68,6 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
             reader.onload = function (e) {
                 imagePreview.src = e.target.result;
                 imagePreview.style.display = 'inline-block';
+                preview.style.display = 'block';
                 submitBtn.style.display = 'inline-block';
             };
             reader.readAsDataURL(file);
@@ -80,3 +102,4 @@ document.addEventListener('DOMContentLoaded', function () {
         else return (bytes / 1048576).toFixed(1) + ' Mo';
     }
 });
+
