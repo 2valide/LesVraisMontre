@@ -15,14 +15,13 @@ classifier = pipeline(
     top_k=5
 )
 
-def is_watch(image_path: str):
+def is_watch(image_path: str) -> bool:
     img = Image.open(image_path).convert("RGB")
     results = classifier(img)
-    watch_candidates = [(r['label'], r['score']) for r in results if 'watch' in r['label'].lower()]
-    if watch_candidates:
-        label, score = max(watch_candidates, key=lambda x: x[1])
-        return True, float(score)
-    return False, float(results[0]['score'])
+    for r in results:
+        if 'watch' in r['label'].lower():
+            return True
+    return False
 
 def symmetry_score(image_path: str) -> float:
     img = cv2.imread(image_path)
@@ -58,8 +57,8 @@ def dominant_color(image_path: str, k: int = 3) -> tuple:
     return tuple(dom)
 
 def analyze_watch(image_path: str) -> dict:
-    is_w, prob = is_watch(image_path)
-    results = {"is_watch": is_w, "watch_prob": round(prob, 3)}
+    is_w = is_watch(image_path)
+    results = {"is_watch": is_w}
     if not is_w:
         return results
     results["symmetry_score"] = round(symmetry_score(image_path), 3)
