@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  watch-adn:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: watch-adn
+    ports:
+      - "5000:5000"
+    restart: unless-stopped
