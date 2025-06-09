@@ -1,0 +1,12 @@
+:root {
+  --color-primary: #0a3d62;
+  --color-secondary: #60a3bc;
+  --color-accent: #e58e26;
+  --color-dark: #1e272e;
+  --color-light: #f9f9f9;
+  --color-success: #78e08f;
+  --color-warning: #fa983a;
+  --shadow-soft: 0 10px 30px rgba(10, 61, 98, 0.1);
+  --shadow-hard: 0 15px 35px rgba(0, 0, 0, 0.2);
+  --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
