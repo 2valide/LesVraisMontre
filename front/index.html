@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Analyse de montre</title>
+</head>
+<body>
+<h1>Upload image de montre</h1>
+<form method="post" enctype="multipart/form-data">
+  <input type="file" name="image" accept="image/*">
+  <button type="submit">Analyser</button>
+</form>
+{% if stats %}
+<h2>Résultats</h2>
+<ul>
+  {% for key, value in stats.items() %}
+    <li>{{ key }} : {{ value }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+</body>
+</html>
