@@ -4,7 +4,10 @@ from ai.analysis import analyze_watch
 
 os.makedirs('uploads', exist_ok=True)
 
-app = Flask(__name__, template_folder='front')
+app = Flask(__name__,
+           template_folder='front',
+           static_folder='front/static',
+           static_url_path='/static')
 
 @app.route('/', methods=['GET', 'POST'])
 def upload():
