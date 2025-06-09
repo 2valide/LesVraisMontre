@@ -1,0 +1,350 @@
+.results-container {
+  width: 100%;
+  padding: 0;
+  max-width: 1000px;
+}
+
+.result-card {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: var(--shadow-soft);
+  margin-bottom: 1rem;
+  width: 100%;
+  animation: fadeIn 0.5s ease-out;
+  overflow: hidden;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.result-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.result-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.status-badge.positive {
+  background-color: rgba(120, 224, 143, 0.2);
+  color: #219653;
+}
+
+.status-badge.negative {
+  background-color: rgba(235, 77, 75, 0.2);
+  color: #eb4d4b;
+}
+
+.status-badge i {
+  margin-right: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.result-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.result-section {
+  margin-bottom: 1.5rem;
+}
+
+.result-section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--color-dark);
+  display: flex;
+  align-items: center;
+}
+
+.result-section-title i {
+  margin-right: 0.5rem;
+  color: var(--color-secondary);
+}
+
+.model-list {
+  list-style: none;
+  padding: 0;
+}
+
+.model-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.model-item:last-child {
+  border-bottom: none;
+}
+
+.model-name {
+  font-weight: 500;
+}
+
+.confidence-bar-container {
+  width: 100%;
+  height: 0.5rem;
+  background-color: #f1f1f1;
+  border-radius: 1rem;
+  overflow: hidden;
+  margin: 0.5rem 0;
+}
+
+.confidence-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-secondary) 0%, var(--color-accent) 100%);
+  border-radius: 1rem;
+  transition: width 1s ease-in-out;
+}
+
+.confidence-value {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--color-accent);
+}
+
+/* Nouvelle classe pour les valeurs de confiance au-dessus du seuil */
+.confidence-value.high {
+  color: var(--color-success);
+}
+
+/* Nouvelle classe pour la couleur du graphe de confiance au-dessus du seuil */
+.confidence-bar.high {
+  background: linear-gradient(90deg, #4ca654 0%, var(--color-success) 100%);
+}
+
+.reality-score-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+}
+
+.reality-score-title {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.reality-score-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: conic-gradient(var(--color-accent) 0%, var(--color-accent) 0%, #f1f1f1 0%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin: 1rem 0;
+}
+
+.reality-score-circle::before {
+  content: "";
+  position: absolute;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background-color: white;
+}
+
+.reality-score-value {
+  position: relative;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-dark);
+}
+
+/* Style amélioré pour le score de réalité au-dessus du seuil */
+.reality-score-value.high {
+  color: var(--color-success);
+  text-shadow: 0 0 1px rgba(120, 224, 143, 0.3);
+}
+
+/* Avec cette modification, le pourcentage aussi sera en vert */
+.reality-score-value.high .reality-score-percentage {
+  color: var(--color-success);
+}
+
+/* Nouvelle classe pour le cercle de score au-dessus du seuil */
+.reality-score-circle.high {
+  background: conic-gradient(var(--color-success) 0%, var(--color-success) 0%, #f1f1f1 0%);
+}
+
+.reality-score-percentage {
+  font-size: 1rem;
+  font-weight: normal;
+}
+
+.reality-score-label {
+  font-size: 0.9rem;
+  color: #777;
+  margin-top: 0.5rem;
+}
+
+/* Styles pour la boîte d'information du score de réalité */
+.reality-score-info-box {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  animation: fadeIn 0.5s ease-out 0.3s forwards;
+  opacity: 0;
+  width: 100%;
+}
+
+.reality-score-info-box.authentic {
+  background-color: rgba(120, 224, 143, 0.1);
+  border-left: 4px solid var(--color-success);
+}
+
+.reality-score-info-box.non-authentic {
+  background-color: rgba(235, 77, 75, 0.1);
+  border-left: 4px solid #eb4d4b;
+}
+
+.reality-score-info {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin: 0;
+  position: relative;
+  padding-left: 1.8rem;
+}
+
+.reality-score-info::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 2px;
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  font-size: 1.1rem;
+}
+
+.reality-score-info-box.authentic .reality-score-info {
+  color: #219653;
+}
+
+.reality-score-info-box.authentic .reality-score-info::before {
+  content: "\f058"; /* check-circle icon */
+  color: var(--color-success);
+}
+
+.reality-score-info-box.non-authentic .reality-score-info {
+  color: #eb4d4b;
+}
+
+.reality-score-info-box.non-authentic .reality-score-info::before {
+  content: "\f06a"; /* exclamation-circle icon */
+  color: #eb4d4b;
+}
+
+@media (max-width: 992px) {
+  .result-card {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .result-content {
+    grid-template-columns: 1fr;
+  }
+
+  .result-header h2 {
+    font-size: 1.6rem;
+  }
+
+  .result-card {
+    padding: 1.2rem;
+  }
+
+  .model-item {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem 0;
+  }
+
+  .model-name {
+    margin-bottom: 0.5rem;
+  }
+
+  .confidence-value {
+    margin-top: 0.2rem;
+    align-self: flex-end;
+  }
+}
+
+@media (max-width: 480px) {
+  .result-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .status-badge {
+    align-self: flex-start;
+  }
+
+  .result-header h2 {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .result-card {
+    padding: 1rem;
+  }
+
+  .reality-score-circle {
+    width: 100px;
+    height: 100px;
+  }
+
+  .reality-score-circle::before {
+    width: 75px;
+    height: 75px;
+  }
+
+  .reality-score-value {
+    font-size: 1.6rem;
+  }
+
+  .reality-score-info-box {
+    padding: 0.8rem;
+  }
+
+  .reality-score-info {
+    font-size: 0.85rem;
+    padding-left: 1.5rem;
+  }
+
+  .reality-score-info::before {
+    font-size: 1rem;
+  }
+}

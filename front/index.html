@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WatchDNA - Analyse de montres de luxe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="static/css/variables.css">
+  <link rel="stylesheet" href="static/css/base.css">
+  <link rel="stylesheet" href="static/css/header.css">
+  <link rel="stylesheet" href="static/css/upload.css">
+  <link rel="stylesheet" href="static/css/results.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="header-pattern"></div>
+      <div class="logo">
+        <i class="fas fa-watch"></i>
+        <h1>WatchDNA</h1>
+      </div>
+      <p class="tagline">Analyse et authentification intelligente de montres de luxe</p>
+    </div>
+
+    <div class="content">
+      <div class="upload-container">
+        <form method="post" enctype="multipart/form-data" id="uploadForm">
+          <div class="drag-area" id="dragArea">
+            <i class="fas fa-cloud-upload-alt icon"></i>
+            <h3>Déposez votre image ici</h3>
+            <p>ou</p>
+            <span id="browseBtn">Parcourir</span>
+            <input type="file" name="image" accept="image/*" required class="file-input" id="fileInput">
+            <img id="imagePreview" class="preview">
+          </div>
+          <div style="text-align: center;">
+            <button type="submit" class="analyze-btn">
+              <i class="fas fa-magnifying-glass"></i>
+              Analyser
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {% if stats %}
+      <div class="results-container">
+        <div class="result-card">
+          <div class="result-header">
+            <h2>Résultat d'analyse</h2>
+            {% if stats.is_watch %}
+            <span class="status-badge positive"><i class="fas fa-check-circle"></i> Montre détectée</span>
+            {% else %}
+            <span class="status-badge negative"><i class="fas fa-times-circle"></i> Aucune montre détectée</span>
+            {% endif %}
+          </div>
+
+          {% if stats.is_watch %}
+          <div class="result-content">
+            <div>
+              <div class="result-section">
+                <div class="result-section-title">
+                  <i class="fas fa-tags"></i> Modèles identifiés
+                </div>
+                <ul class="model-list">
+                  {% for model, score in stats.watch_models %}
+                  <li class="model-item">
+                    <div>
+                      <div class="model-name">{{ model }}</div>
+                      <div class="confidence-bar-container">
+                        <div class="confidence-bar{% if (score*100)|round(1) >= 50 %} high{% endif %}" style="width: {{ (score*100)|round(1) }}%"></div>
+                      </div>
+                    </div>
+                    <span class="confidence-value{% if (score*100)|round(1) >= 50 %} high{% endif %}">{{ (score*100)|round(1) }}%</span>
+                  </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+
+            <div>
+              <div class="result-section">
+                <div class="result-section-title">
+                  <i class="fas fa-shield-alt"></i> Score d'authenticité
+                </div>
+                <div class="reality-score-container">
+                  <div class="reality-score-circle{% if stats.reality_score >= 30 %} high{% endif %}" id="realityScoreCircle">
+                    <div class="reality-score-value{% if stats.reality_score >= 30 %} high{% endif %}">{{ stats.reality_score }}<span class="reality-score-percentage">%</span></div>
+                  </div>
+                  <div class="reality-score-label">Fiabilité estimée</div>
+                </div>
+                <div class="reality-score-info-box{% if stats.reality_score >= 30 %} authentic{% else %} non-authentic{% endif %}">
+                    {% if stats.reality_score >= 30 %}
+                    <p class="reality-score-info">Ce score indique une forte probabilité que la montre soit authentique.</p>
+                    {% else %}
+                    <p class="reality-score-info">Ce score indique une faible probabilité que la montre soit authentique.</p>
+                    {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <footer>
+      <p>&copy; 2026 WatchDNA - Technologie d'analyse d'images par IA</p>
+    </footer>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const dragArea = document.getElementById('dragArea');
+      const fileInput = document.getElementById('fileInput');
+      const imagePreview = document.getElementById('imagePreview');
+      const browseBtn = document.getElementById('browseBtn');
+      const realityScoreCircle = document.getElementById('realityScoreCircle');
+
+      if (realityScoreCircle) {
+        {% if stats and stats.is_watch %}
+        const score = {{ stats.reality_score }};
+        const colorClass = score >= 50 ? 'var(--color-success)' : 'var(--color-accent)';
+        realityScoreCircle.style.background = `conic-gradient(${colorClass} 0% ${score}%, #f1f1f1 ${score}% 100%)`;
+        {% endif %}
+      }
+
+      // Gestion du drag & drop
+      dragArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dragArea.classList.add('active');
+      });
+
+      dragArea.addEventListener('dragleave', () => {
+        dragArea.classList.remove('active');
+      });
+
+      dragArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dragArea.classList.remove('active');
+
+        const file = e.dataTransfer.files[0];
+        if (file) {
+          fileInput.files = e.dataTransfer.files;
+          displayPreview(file);
+        }
+      });
+
+      browseBtn.addEventListener('click', () => {
+        fileInput.click();
+      });
+
+      fileInput.addEventListener('change', function() {
+        if (this.files[0]) {
+          displayPreview(this.files[0]);
+        }
+      });
+
+      function displayPreview(file) {
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+          imagePreview.src = e.target.result;
+          imagePreview.style.display = 'block';
+          dragArea.querySelector('h3').textContent = file.name;
+          dragArea.querySelector('.icon').style.display = 'none';
+          dragArea.querySelector('p').style.display = 'none';
+          browseBtn.style.display = 'none';
+        };
+
+        reader.readAsDataURL(file);
+      }
+    });
+  </script>
+</body>
+</html>
