@@ -1,22 +1,119 @@
 <!doctype html>
 <html lang="fr">
+
 <head>
   <meta charset="utf-8">
-  <title>Analyse de montre</title>
+  <title>WatchDNA</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f8fafc;
+      min-height: 100vh;
+    }
+
+    .results-container {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.4s ease-out;
+    }
+
+    .results-container.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .upload-preview {
+      max-height: 300px;
+      object-fit: contain;
+    }
+  </style>
 </head>
-<body>
-<h1>Upload image de montre</h1>
-<form method="post" enctype="multipart/form-data">
-  <input type="file" name="image" accept="image/*">
-  <button type="submit">Analyser</button>
-</form>
-{% if stats %}
-<h2>Résultats</h2>
-<ul>
-  {% for key, value in stats.items() %}
-    <li>{{ key }} : {{ value }}</li>
-  {% endfor %}
-</ul>
-{% endif %}
+
+<body class="flex flex-col">
+  <nav class="p-4 flex justify-between items-center border-b">
+    <div class="flex items-center space-x-2">
+      <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+      </svg>
+      <span class="text-xl font-bold">WatchDNA</span>
+    </div>
+  </nav>
+
+  <main class="flex-grow flex items-center justify-center p-4">
+    <div class="w-full max-w-md space-y-6 text-center">
+      <div class="space-y-2">
+        <h1 class="text-3xl font-medium text-gray-800">Watch Analysis</h1>
+        <p class="text-gray-500">Upload high-quality images for precise authentication of your watches</p>
+      </div>
+
+      <form method="post" enctype="multipart/form-data" class="bg-white p-8 rounded-xl shadow-sm">
+        <div class="mb-6">
+          <label class="flex flex-col items-center justify-center w-full rounded-lg cursor-pointer">
+            <div id="uploadPreviewContainer" class="hidden mb-4">
+              <img id="uploadPreview" class="upload-preview w-full rounded-lg border" />
+            </div>
+            <div id="uploadPlaceholder"
+              class="flex flex-col items-center justify-center pt-5 pb-6 h-40 border-2 border-dashed border-gray-300 rounded-lg hover:bg-gray-50">
+              <svg class="w-10 h-10 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+              </svg>
+              <p class="text-sm text-gray-500"><span class="font-medium">Click to upload</span> or drag and drop</p>
+            </div>
+            <input type="file" name="image" id="imageUpload" accept="image/*" class="hidden" required>
+          </label>
+        </div>
+        <button type="submit" class="w-full py-3 bg-blue-500 rounded-lg text-white font-medium hover:bg-blue-600">
+          Analyze Watch
+        </button>
+      </form>
+
+      {% if stats %}
+      <div class="results-container bg-white p-6 rounded-xl shadow-sm mt-6" id="results">
+        <h2 class="text-xl font-medium text-gray-800 mb-4">Analysis Results</h2>
+        <div class="space-y-3">
+          {% for key, value in stats.items() %}
+          <div class="flex justify-between items-center py-2 px-3 bg-gray-50 rounded-lg">
+            <span class="text-gray-600">{{ key }}</span>
+            <span class="font-medium text-gray-800">{{ value }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </main>
+
+  <script>
+    // Image preview functionality
+    document.getElementById('imageUpload').addEventListener('change', function (e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+          const preview = document.getElementById('uploadPreview');
+          preview.src = event.target.result;
+          document.getElementById('uploadPreviewContainer').classList.remove('hidden');
+          document.getElementById('uploadPlaceholder').classList.add('hidden');
+        }
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Show results with smooth animation
+    document.addEventListener('DOMContentLoaded', function () {
+      const results = document.getElementById('results');
+      if (results) {
+        setTimeout(() => {
+          results.classList.add('show');
+        }, 50);
+      }
+    });
+  </script>
 </body>
+
 </html>
