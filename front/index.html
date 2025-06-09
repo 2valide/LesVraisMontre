@@ -3,20 +3,40 @@
 <head>
   <meta charset="utf-8">
   <title>Analyse de montre</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; background: #f9f9f9; }
+    .container { max-width: 600px; margin: auto; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    h1, h2 { color: #333; }
+    ul { list-style: none; padding: 0; }
+    li { margin: 0.5rem 0; }
+    .nested { margin-left: 1.5rem; }
+    .badge { display: inline-block; padding: 0.2em 0.6em; border-radius: 4px; background: #eee; margin-left: 0.5em; }
+  </style>
 </head>
 <body>
-<h1>Upload image de montre</h1>
-<form method="post" enctype="multipart/form-data">
-  <input type="file" name="image" accept="image/*">
-  <button type="submit">Analyser</button>
-</form>
-{% if stats %}
-<h2>Résultats</h2>
-<ul>
-  {% for key, value in stats.items() %}
-    <li>{{ key }} : {{ value }}</li>
-  {% endfor %}
-</ul>
-{% endif %}
+  <div class="container">
+    <h1>Analyse de Montre</h1>
+    <form method="post" enctype="multipart/form-data">
+      <input type="file" name="image" accept="image/*" required>
+      <button type="submit">Analyser</button>
+    </form>
+
+    {% if stats %}
+      <h2>Résultats</h2>
+      <ul>
+        <li><strong>Montre détectée :</strong> {{ stats.is_watch }}</li>
+        {% if stats.is_watch %}
+          <li><strong>Modèles probables :</strong>
+            <ul class="nested">
+              {% for model, score in stats.watch_models %}
+                <li>{{ model }} <span class="badge">{{ (score*100)|round(1) }}%</span></li>
+              {% endfor %}
+            </ul>
+          </li>
+          <li><strong>Fiabilité estimée :</strong> <span class="badge">{{ stats.reality_score }}%</span></li>
+        {% endif %}
+      </ul>
+    {% endif %}
+  </div>
 </body>
 </html>
